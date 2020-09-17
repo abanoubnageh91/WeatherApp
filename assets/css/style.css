@@ -1,0 +1,16 @@
+.page-loader {
+    position: absolute;
+    z-index: 500;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 200px 0 0 0;
+    background-color: rgba(0, 0, 0, 0.80);
+}
+
+[ng\:cloak],
+[ng-cloak],
+.ng-cloak {
+    display: none !important;
+}

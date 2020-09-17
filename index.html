@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+
+    <title>Weather Data</title>
+
+
+    <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="node_modules/chart.js/dist/Chart.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/animations.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+
+
+</head>
+
+<body ng-app="app.weather" ng-cloak>
+
+    <div class="container" ng-controller="WeatherCtrl">
+        <!-- Current Weather Details-->
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{{item.title}}</h2>
+            </div>
+            <div class="col-md-12">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="weatherDesc">Current weather description: </label>
+                            <label for="weatherDesc"><strong>{{condition.text}}</strong></label>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="currentTemp">Current temperature: </label>
+                            <label for="weatherDesc"><strong>{{condition.temp}} {{tempMark}}{{temperature}}</strong></label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="highTemp">Today's high temperature: </label>
+                            <label for="weatherDesc"><strong>{{weathers[0].high}} {{tempMark}}{{temperature}}</strong></label>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="lowTemp">Today's low temperature: </label>
+                            <label for="weatherDesc"><strong>{{weathers[0].low}} {{tempMark}}{{temperature}}</strong></label>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <!-- Current conditions area-->
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Current conditions</h2>
+            </div>
+            <div class="col-md-12">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Wind</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Atmosphere</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Astronomy</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <h5>Chill: <span class="label label-default">{{wind.chill}}</span></h5>
+                        <h5>Direction: <span class="label label-default">{{wind.direction}}</span></h5>
+                        <h5>Speed: <span class="label label-default">{{wind.speed}} {{speed}}</span></h5>
+                    </div>
+                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <h5>Humidity: <span class="label label-default">{{atmosphere.humidity}}%</span></h5>
+                        <h5>Pressure: <span class="label label-default">{{atmosphere.pressure}} {{pressure}}</span></h5>
+                        <h5>Rising: <span class="label label-default">{{atmosphere.rising}}</span></h5>
+                        <h5>Visibility: <span class="label label-default">{{atmosphere.visibility}} {{distance}}</span></h5>
+                    </div>
+                    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <h5>Sunrise <span class="label label-default">{{astronomy.sunrise}}</span></h5>
+                        <h5>Sunset <span class="label label-default">{{astronomy.sunset}}</span></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Forecast area-->
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Forecast conditions for next days</h2>
+            </div>
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Location</th>
+                            <th scope="col">Current weather</th>
+                            <th scope="col">Current temperature</th>
+                            <th scope="col">Today's high temperature</th>
+                            <th scope="col">Today's low temperature</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="weather in weathers">
+                            <th scope="row">{{weather.code}}</th>
+                            <td>{{weather.date}}</td>
+                            <td>{{weather.day}}</td>
+                            <td>{{weather.high}} °F</td>
+                            <td>{{weather.low}} °F</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 7 Day forecast as a multi-line chart area-->
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Multi-line chart for 7 days forecast</h2>
+            </div>
+            <div class="col-md-12">
+                <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride">
+        </canvas>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular-animate/angular-animate.min.js"></script>
+    <script src="node_modules/chart.js/dist/Chart.min.js"></script>
+    <script src="node_modules/angular-chart.js/dist/angular-chart.min.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/weather/controllers/weatherController.js"></script>
+    <script src="app/weather/services/weatherService.js"></script>
+
+</body>
+
+</html>
